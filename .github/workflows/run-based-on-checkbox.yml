@@ -70,12 +70,12 @@ jobs:
             - name: Get Comment Body
               id: get_body
               run: |
-                if [[ "${{ github.event.action }}" != "edited" ]] then
-                    body=${{ steps.fc.outputs.comment-body }}
+                if [[ "${{ github.event.action }}" != "edited" ]]; then
+                    body=$'${{ steps.fc.outputs.comment-body }}''
                 else
-                    body=${{ github.event.comment.body }}
+                    body=$'${{ github.event.comment.body }}'
                 fi
-                
+
                 delimiter="$(openssl rand -hex 8)"
                 echo "body<<${delimiter}" >> "${GITHUB_OUTPUT}"
                 echo "${body}" >> "${GITHUB_OUTPUT}"
