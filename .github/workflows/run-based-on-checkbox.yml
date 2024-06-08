@@ -70,7 +70,7 @@ jobs:
             - name: Get Comment Body
               id: get_body
               run: |
-                if [[ ${{ github.event.action }} != "edited" ]] then
+                if [[ "${{ github.event.action }}" != "edited" ]] then
                     echo "body=${{ steps.fc.outputs.comment-body }}" >> $GITHUB_OUTPUT
                 else
                     echo "body=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
