@@ -10,7 +10,6 @@ jobs:
     create_comment_if_needed:
         name: Create a Comment if Needed
         runs-on: ubuntu-latest
-        if: ${{ github.event.issue.pull_request }}
         steps:
             - uses: actions/checkout@v4
             - name: Find Comment
