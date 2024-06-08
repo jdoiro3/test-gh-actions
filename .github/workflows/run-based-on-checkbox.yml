@@ -13,7 +13,6 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: jwalton/gh-find-current-pr@v1
-              if: steps.has_metrics.outputs.files_exist == 'true' && github.event_name == 'pull_request'
               id: find_pr
               with:
                 # Can be "open", "closed", or "all".  Defaults to "open".
@@ -50,7 +49,6 @@ jobs:
               run: |
                 pip install markdown-to-json
             - uses: jwalton/gh-find-current-pr@v1
-              if: steps.has_metrics.outputs.files_exist == 'true' && github.event_name == 'pull_request'
               id: find_pr
               with:
                 # Can be "open", "closed", or "all".  Defaults to "open".
