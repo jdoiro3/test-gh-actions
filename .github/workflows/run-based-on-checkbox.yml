@@ -22,7 +22,6 @@ jobs:
               id: fc
               with:
                 issue-number: ${{ steps.find_pr.outputs.pr }}
-                comment-author: 'github-actions[bot]'
                 body-includes: "## Checkbox"
             - name: Create Comment
               id: comment
