@@ -32,6 +32,7 @@ jobs:
                 edit-mode: replace
 
     check_checkbox_and_run:
+        needs: [create_comment_if_needed]
         name: Check Checkbox and Run
         runs-on: ubuntu-latest
         steps:
