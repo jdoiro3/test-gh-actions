@@ -22,7 +22,7 @@ jobs:
             - name: Create Comment
               id: comment
               if: ${{ steps.fc.outputs.comment-id == '' }}
-              uses: peter-evans/create-or-update-comment@v2
+              uses: peter-evans/create-or-update-comment@v4
               with:
                 comment-id: ${{ steps.fc.outputs.comment-id }}
                 issue-number: ${{ github.event.pull_request.number }}
