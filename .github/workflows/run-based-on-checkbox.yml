@@ -1,6 +1,8 @@
 name: Check Version and Comment on PR
 
 on:
+    pull_request:
+        types: [opened]
     issue_comment:
         types: [created, edited]
 
