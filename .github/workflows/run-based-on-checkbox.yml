@@ -12,11 +12,17 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+            - uses: jwalton/gh-find-current-pr@v1
+              if: steps.has_metrics.outputs.files_exist == 'true' && github.event_name == 'pull_request'
+              id: find_pr
+              with:
+                # Can be "open", "closed", or "all".  Defaults to "open".
+                state: all
             - name: Find Comment
               uses: peter-evans/find-comment@v3
               id: fc
               with:
-                issue-number: ${{ github.event.pull_request.number }}
+                issue-number: ${{ steps.find_pr.outputs.pr }}
                 comment-author: 'github-actions[bot]'
                 body-includes: "## Checkbox"
             - name: Create Comment
@@ -43,11 +49,17 @@ jobs:
             - name: Install markdown-to-json
               run: |
                 pip install markdown-to-json
+            - uses: jwalton/gh-find-current-pr@v1
+              if: steps.has_metrics.outputs.files_exist == 'true' && github.event_name == 'pull_request'
+              id: find_pr
+              with:
+                # Can be "open", "closed", or "all".  Defaults to "open".
+                state: all
             - name: Find Comment
               uses: peter-evans/find-comment@v3
               id: fc
               with:
-                issue-number: ${{ github.event.pull_request.number }}
+                issue-number: ${{ steps.find_pr.outputs.pr }}
                 comment-author: 'github-actions[bot]'
                 body-includes: "## Checkbox"
             - name: See if Checkbox Checked
