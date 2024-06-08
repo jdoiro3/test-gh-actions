@@ -71,7 +71,7 @@ jobs:
               id: get_body
               run: |
                 if [[ "${{ github.event.action }}" != "edited" ]]; then
-                    body=$'${{ steps.fc.outputs.comment-body }}''
+                    body=$'${{ steps.fc.outputs.comment-body }}'
                 else
                     body=$'${{ github.event.comment.body }}'
                 fi
