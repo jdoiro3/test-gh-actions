@@ -21,7 +21,7 @@ jobs:
                 body-includes: "## Checkbox"
             - name: Create Comment
               id: comment
-              if: ${{ !steps.fc.outputs }}
+              if: ${{ steps.fc.outputs == '' }}
               uses: peter-evans/create-or-update-comment@v2
               with:
                 comment-id: ${{ steps.fc.outputs.comment-id }}
