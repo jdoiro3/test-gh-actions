@@ -17,19 +17,21 @@ jobs:
               run: echo "$GITHUB_CONTEXT"
             - uses: actions/checkout@v4
             - uses: jwalton/gh-find-current-pr@v1
+              if: ${{ github.event.action != 'edited' }}
               id: find_pr
               with:
                 # Can be "open", "closed", or "all".  Defaults to "open".
                 state: all
             - name: Find Comment
+              if: ${{ github.event.action != 'edited' }}
               uses: peter-evans/find-comment@v3
               id: fc
               with:
                 issue-number: ${{ steps.find_pr.outputs.pr }}
                 body-includes: "## Checkbox"
             - name: Create Comment
+              if: ${{ github.event.action != 'edited' && steps.fc.outputs.comment-id == '' }}
               id: comment
-              if: ${{ steps.fc.outputs.comment-id == '' }}
               uses: peter-evans/create-or-update-comment@v4
               with:
                 comment-id: ${{ steps.fc.outputs.comment-id }}
@@ -52,21 +54,32 @@ jobs:
               run: |
                 pip install markdown-to-json
             - uses: jwalton/gh-find-current-pr@v1
+              if: ${{ github.event.action != 'edited' }}
               id: find_pr
               with:
                 # Can be "open", "closed", or "all".  Defaults to "open".
                 state: all
             - name: Find Comment
+              if: ${{ github.event.action != 'edited' }}
               uses: peter-evans/find-comment@v3
               id: fc
               with:
                 issue-number: ${{ steps.find_pr.outputs.pr }}
                 comment-author: 'github-actions[bot]'
                 body-includes: "## Checkbox"
+            - name: Get Comment Body
+              id: get_body
+              if: ${{ github.event.action != 'edited' }}
+              run: |
+                if [[ ${{ github.event.action }} != "edited" ]] then
+                    echo "body=${{ steps.fc.outputs.comment-body }}" >> $GITHUB_OUTPUT
+                else
+                    echo "body=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
+                fi
             - name: See if Checkbox Checked
               id: is_checked
               run: |
-                checked=$(python .github/workflows/check-checkbox.py $'${{ steps.fc.outputs.comment-body }}')
+                checked=$(python .github/workflows/check-checkbox.py $'${{ steps.get_body.outputs.body }}')
                 echo "checked=$checked" >> $GITHUB_OUTPUT
             - name: Run only if Checked
               if: ${{ steps.is_checked.outputs.checked == 'true' }}
