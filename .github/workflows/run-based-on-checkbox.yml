@@ -71,10 +71,15 @@ jobs:
               id: get_body
               run: |
                 if [[ "${{ github.event.action }}" != "edited" ]] then
-                    echo "body=${{ steps.fc.outputs.comment-body }}" >> $GITHUB_OUTPUT
+                    body=${{ steps.fc.outputs.comment-body }}
                 else
-                    echo "body=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
+                    body=${{ github.event.comment.body }}
                 fi
+                
+                delimiter="$(openssl rand -hex 8)"
+                echo "body<<${delimiter}" >> "${GITHUB_OUTPUT}"
+                echo "${body}" >> "${GITHUB_OUTPUT}"
+                echo "${delimiter}" >> "${GITHUB_OUTPUT}"
             - name: See if Checkbox Checked
               id: is_checked
               run: |
