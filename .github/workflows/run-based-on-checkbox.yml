@@ -2,7 +2,7 @@ name: Check Version and Comment on PR
 
 on:
     pull_request:
-        types: [opened]
+        types: [opened, reopened]
     issue_comment:
         types: [created, edited]
 
