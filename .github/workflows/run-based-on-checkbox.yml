@@ -69,7 +69,6 @@ jobs:
                 body-includes: "## Checkbox"
             - name: Get Comment Body
               id: get_body
-              if: ${{ github.event.action != 'edited' }}
               run: |
                 if [[ ${{ github.event.action }} != "edited" ]] then
                     echo "body=${{ steps.fc.outputs.comment-body }}" >> $GITHUB_OUTPUT
