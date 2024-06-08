@@ -1,0 +1,59 @@
+name: Check Version and Comment on PR
+
+on:
+    issue_comment:
+        types: [created, edited]
+
+jobs:
+    create_comment_if_needed:
+        name: Create a Comment if Needed
+        runs-on: ubuntu-latest
+        if: ${{ github.event.issue.pull_request }}
+        steps:
+            - uses: actions/checkout@v4
+            - name: Find Comment
+              uses: peter-evans/find-comment@v2
+              id: fc
+              with:
+                issue-number: ${{ github.event.pull_request.number }}
+                comment-author: 'github-actions[bot]'
+                body-includes: "## Checkbox"
+            - name: Create Comment
+              id: comment
+              if: ${{ !steps.fc.outputs }}
+              uses: peter-evans/create-or-update-comment@v2
+              with:
+                comment-id: ${{ steps.fc.outputs.comment-id }}
+                issue-number: ${{ github.event.pull_request.number }}
+                body: |
+                  ## Checkbox
+                  - [ ] Deploy dev version of app.
+                edit-mode: replace
+
+    check_checkbox_and_run:
+        name: Check Checkbox and Run
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                python-version: '3.10' 
+            - name: Install markdown-to-json
+              run: |
+                pip install markdown-to-json
+            - name: Find Comment
+              uses: peter-evans/find-comment@v2
+              id: fc
+              with:
+                issue-number: ${{ github.event.pull_request.number }}
+                comment-author: 'github-actions[bot]'
+                body-includes: "## Checkbox"
+            - name: See if Checkbox Checked
+              id: is_checked
+              run: |
+                checked=$(python .github/workflows/check-checkbox.py $'${{ steps.fc.outputs.comment-body }}')
+                echo "checked=$checked" >> $GITHUB_OUTPUT
+            - name: Run only if Checked
+              if: ${{ steps.is_checked.outputs.checked == 'true' }}
+              run: |
+                echo "Checkbox was checked"
