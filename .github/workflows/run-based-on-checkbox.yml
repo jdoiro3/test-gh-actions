@@ -33,8 +33,6 @@ jobs:
                 for file in ${ALL_CHANGED_FILES}; do
                     echo "$file was changed"
                 done
-    
-                python .github/workflows/get-changed-apps.py ${ALL_CHANGED_FILES}
             - uses: jwalton/gh-find-current-pr@v1
               if: ${{ github.event.action != 'edited' }}
               id: find_pr
